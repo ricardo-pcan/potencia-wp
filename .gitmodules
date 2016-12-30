@@ -1,0 +1,3 @@
+[submodule "wordpress-workflow"]
+	path = wordpress-workflow
+	url = https://github.com/vinco/wordpress-workflow.git

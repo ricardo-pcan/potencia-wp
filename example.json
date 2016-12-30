@@ -1,0 +1,37 @@
+file/ID
+{
+  nivel: 1, //Primaria o Secundaria
+  grado: 2
+  asignatura: 16, //Español, Matemáticas, Geografía
+  bloque: 1 //
+  catalogación: {
+    eje: "string"
+    tema: "string"
+    contenidos: "string"
+  }
+  autor: "String",
+  no_ficha: "string"
+  title: "string",
+  discover: {
+    img: "string",
+    text: "string"
+    question: "string"
+    sugerencias: {
+      eje: "string",
+      tema: ["tema1", "tema2" ...],
+      link: ["link1", "link2" ...]
+      emociones: "string"
+    }
+  }
+  idea: {
+      text: "string",
+      comment: "string"
+      attachments: { 'pending'}
+  }
+  crea: {
+      text: "string",
+      comment: "string"
+      attachments: { 'pending'}
+  }
+  score: 4
+}
