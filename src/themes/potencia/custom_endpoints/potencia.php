@@ -37,7 +37,7 @@ function register_potencia_routes() {
 
 
 /**
- * Get fichas custom post type by id
+ * Get fichas custom post
  *
  * @param array $data Options for the function.
  * @return Array Array articles category post.
@@ -114,7 +114,6 @@ function get_all_files() {
 }
 
 
-
 /**
  * Get fichas custom post type by id
  *
@@ -124,7 +123,6 @@ function get_all_files() {
 function get_file($data) {
   $params = $data->get_params();
   $post = get_post( $params['id'] );
-
   unset(
     $post->post_author,
     $post->post_date,
@@ -148,13 +146,11 @@ function get_file($data) {
     $post->comment_count,
     $post->filter
   );
-
   if( $post ){
     // Get Metadata values
     $author = get_field( 'author', $post->ID );
     $file_number = get_field( 'file_number', $post->ID );
     $file_title = get_field( 'file_title', $post->ID);
-
     // Get Discover values
     $discover_img = get_field( 'discover_img', $post->ID );
     $discover_txt = get_field( 'discover_txt', $post->ID );
@@ -163,41 +159,31 @@ function get_file($data) {
     $discover_relevant = get_field( 'discover_relevant', $post->ID );
     $discover_related = get_field( 'discover_related', $post->ID );
     $discover_emotions = get_field( 'discover_emotions', $post->ID );
-
     // Get Idea values
     $idea_txt = get_field( 'idea_text', $post->ID );
     $idea_content = get_field( 'idea_additional', $post->ID );
     $idea_suggest = get_field( 'idea_suggest', $post->ID );
-
     // Get Create values
     $create_txt = get_field( 'create_text', $post->ID );
     $create_content = get_field( 'create_additional', $post->ID );
     $create_suggest = get_field( 'create_suggest', $post->ID );
-
     // Get Evaluation values
     $evaluation_content = get_field( 'evaluation_data', $post->ID );
-
     $score = get_field( 'file_rate', $post->ID);
-
-
     /*
      * Set post object response
      */
-
     // Set Index response
     $post->ambit = !empty( $ambit ) ? $ambit : '';
     $post->expected_learning = !empty( $expected_learning ) ? $expected_learning : '';
     $post->theme = !empty( $theme ) ? $theme : '';
     $post->contents = !empty( $contents ) ? $contents : '';
-
     // Set Metadata response
     $post->author = !empty( $author ) ? $author : '';
     $post->file_number = !empty( $file_number ) ? $file_number : '';
     $post->file_title = !empty( $file_title ) ? $file_title : '';
-
     // Set Discover response
     $discover = new stdClass();
-
     $post->discover = $discover;
     $discover->image = !empty( $discover_img ) ? $discover_img : '';
     $discover->text = !empty( $discover_txt ) ? $discover_txt : '';
@@ -206,36 +192,26 @@ function get_file($data) {
     $discover->relevant_themes = !empty( $discover_relevant ) ? $discover_relevant : '';
     $discover->related = !empty( $discover_related ) ? $discover_related : '';
     $discover->emotions = !empty( $discover_emotions ) ? $discover_emotions : '';
-
     // Set Idea response
     $idea = new stdClass();
-
     $post->idea = $idea;
     $idea->text = !empty( $idea_txt ) ? $idea_txt : '';
     $idea->content = !empty( $idea_content ) ? $idea_content : '';
     $idea->suggest = !empty( $idea_suggest ) ? $idea_suggest : '';
-
     // Set Create response
     $create = new stdClass();
-
     $post->create = $idea;
     $create->text = !empty( $create_txt ) ? $create_txt : '';
     $create->content = !empty( $create_content ) ? $create_content : '';
     $create->suggest = !empty( $create_suggest ) ? $create_suggest : '';
-
     $post->evaluation_content = !empty( $evaluation_content ) ? $evaluation_content : '';
-
-
     $post->score = !empty( $score ) ? $score : '';
-
     return $post;
-
   } else {
     $post->code = 404;
     $post->msg = 'Not Found';
     header('Status: 404 Not Found');
     return $post;
-
   }
 }
 

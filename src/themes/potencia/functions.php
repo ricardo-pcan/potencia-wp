@@ -47,6 +47,40 @@ function fichas_cpt() {
     register_post_type( 'fichas', $args );
 }
 
+// hook into the init action and call create_book_taxonomies when it fires
+add_action( 'init', 'create_fichas_taxonomies', 0 );
+
+// create two taxonomies, genres and writers for the post type "book"
+function create_fichas_taxonomies() {
+  // Add new taxonomy, make it hierarchical (like categories)
+  $labels = array(
+    'name'              => _x( 'Niveles', 'taxonomy general name', 'potencia' ),
+    'singular_name'     => _x( 'Nivel', 'taxonomy singular name', 'potencia' ),
+    'search_items'      => __( 'Buscar Niveles', 'potencia' ),
+    'all_items'         => __( 'Todos los niveles', 'potencia' ),
+    'parent_item'       => __( 'Nivel Padre', 'potencia' ),
+    'parent_item_colon' => __( 'Nivel Padre:', 'potencia' ),
+    'edit_item'         => __( 'Editar Nivel', 'potencia' ),
+    'update_item'       => __( 'Actualizar Nivel', 'potencia' ),
+    'add_new_item'      => __( 'Añadir nuevo nivel', 'potencia' ),
+    'new_item_name'     => __( 'Nuevo Nivel', 'potencia' ),
+    'menu_name'         => __( 'Nivel', 'potencia' ),
+  );
+
+	$args = array(
+		'hierarchical'      => true,
+    'post_type'         => 'fichas',
+		'labels'            => $labels,
+		'show_ui'           => true,
+		'show_admin_column' => true,
+		'query_var'         => true,
+		'rewrite'           => array( 'slug' => 'level' ),
+	);
+
+	register_taxonomy( 'nivel', array( 'fichas' ), $args );
+}
+
+
 /**
  * Add REST API support to an already registered post type.
  */
@@ -139,5 +173,21 @@ add_action( 'rest_api_init', 'slug_register_fichas_custom_post_type' );
  * Include custom endpoints
  */
 include "custom_endpoints/potencia.php";
+
+/*
+ * Include custom fields
+ */
+include "custom-fields.php";
+
+
+
+function load_custom_wp_admin_js() {
+  wp_register_script( 'admin', get_template_directory_uri() . '/admin.js', array(), '', true ); // Vendor
+  wp_enqueue_script( 'admin' ); // Enqueue it!
+}
+add_action( 'admin_enqueue_scripts', 'load_custom_wp_admin_js' );
+
+
+
 
 ?>
