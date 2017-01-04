@@ -41,7 +41,7 @@ function fichas_cpt() {
         'show_in_rest'       => true,
         'rest_base'          => 'fichas',
         'rest_controller_class' => 'WP_REST_Posts_Controller',
-        'supports'           => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'comments' )
+        'supports'           => array( 'title' )
     );
 
     register_post_type( 'fichas', $args );
@@ -111,7 +111,7 @@ function slug_register_fichas_custom_post_type() {
 }
 
 /*
- *  Gets the data from carousels custom post type
+ *  Gets the data from fichas custom post type
  *
  *  @param (array)($object) Details of current post
  *  @param (string)($field_name) The name of the field.
@@ -134,7 +134,6 @@ function get_fichas_post_type( $object, $field_name, $request ) {
     return get_post_meta( $object[ 'id' ], $field_name, true );
 }
 add_action( 'rest_api_init', 'slug_register_fichas_custom_post_type' );
-
 
 /*
  * Include custom endpoints

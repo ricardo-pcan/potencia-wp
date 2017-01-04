@@ -1,7 +1,6 @@
 {
     "vagrant": {
         "url": "wordpress.local",
-
         "user": "vagrant",
         "group": "www-data",
         "hosts": ["127.0.0.1:2222"],
@@ -16,6 +15,26 @@
         "dbname": "wordpress_workflow",
         "dbuser": "root",
         "dbpassword": "password",
+        "dbhost": "localhost",
+        "dbprefix": "wp_"
+    },
+    "staging": {
+        "url": "potencia.vincoorbisdev.com",
+        "user": "potencia",
+        "group": "potencia",
+        "hosts": ["potencia.vincoorbisdev.com"],
+        "public_dir": "/var/www/vhosts/potencia.vincoorbisdev.com/public/",
+        "wpworkflow_dir":"/var/www/vhosts/potencia.vincoorbisdev.com/wpworkflow/",
+        "command_prefixes": [
+            "/var/www/vhosts/potencia.vincoorbisdev.com/env/wp-cli/bin/activate"
+        ],
+        "title": "Potencia",
+        "admin_user": "admin",
+        "admin_password": "D5ySojuE2aOV4nA",
+        "admin_email": "fm@vincoorbis.com",
+        "dbname": "potencia",
+        "dbuser": "potencia",
+        "dbpassword": "wrewrUp+a6uqev2",
         "dbhost": "localhost",
         "dbprefix": "wp_"
     }
