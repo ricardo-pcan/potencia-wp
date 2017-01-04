@@ -23,15 +23,15 @@ function get_name_article_category() {
  * Register rangel routes for WP API v2.
  */
 function register_potencia_routes() {
-  register_rest_route( get_potencia_namespace(), '/files/(?P<id>[0-9]+)', array(
-    'methods' => 'GET',
-    'callback' => 'get_file'
-  ));
+    register_rest_route( get_potencia_namespace(), '/files/(?P<id>[0-9]+)', array(
+        'methods' => 'GET',
+        'callback' => 'get_file'
+    ));
 
-  register_rest_route( get_potencia_namespace(), '/files', array(
-    'methods' => 'GET',
-    'callback' => 'get_all_files'
-  ));
+    register_rest_route( get_potencia_namespace(), '/files', array(
+        'methods' => 'GET',
+        'callback' => 'get_all_files'
+    ));
 
 }
 
@@ -42,75 +42,77 @@ function register_potencia_routes() {
  * @param array $data Options for the function.
  * @return Array Array articles category post.
  */
-function get_all_files() {
-  $args = array(
-    'posts_per_page'   => 18,
-    'offset'           => 0,
-    'category'         => '',
-    'category_name'    => '',
-    'orderby'          => 'date',
-    'order'            => 'DESC',
-    'include'          => '',
-    'exclude'          => '',
-    'meta_key'         => '',
-    'meta_value'       => '',
-    'post_type'        => 'fichas',
-    'post_mime_type'   => '',
-    'post_parent'      => '',
-    'author'	   => '',
-    'author_name'	   => '',
-    'post_status'      => 'publish',
-    'suppress_filters' => true
-  );
+function get_all_files($params) {
 
-  $posts_array = get_posts( $args );
+    $paged = isset($_GET['paged']) ? $_GET['paged'] - 1 : 0;
+    $postPerPage = 10;
+    $postOffset = $paged * $postPerPage;
 
-  foreach( $posts_array as $post) {
-    unset(
-      $post->post_author,
-      $post->post_date,
-      $post->post_date_gmt,
-      $post->post_content_filtered,
-      $post->post_excerpt,
-      $post->post_status,
-      $post->comment_status,
-      $post->ping_status,
-      $post->post_password,
-      $post->to_ping,
-      $post->pinged,
-      $post->post_modified,
-      $post->post_modified_gmt,
-      $post->content_filtered,
-      $post->post_parent,
-      $post->guid,
-      $post->menu_order,
-      $post->post_type,
-      $post->post_mime_type,
-      $post->comment_count,
-      $post->filter
+    $args = array(
+        'posts_per_page'   => $postPerPage,
+        'offset'           => $postOffset,
+        'orderby'          => 'date',
+        'order'            => 'DESC',
+        'post_type'        => 'fichas',
+        'post_status'      => 'publish',
+        'suppress_filters' => true
     );
 
-    /*
-     * Get custom fields values
-     */
+    $posts_array = get_posts($args);
 
-    // Get Index values
-    $ambit = get_field( 'ambit', $post->ID );
-    $expected_learning = get_field( 'expected_learning', $post->ID );
-    $theme = get_field( 'theme', $post->ID );
-    $contents = get_field( 'contents', $post->ID );
+    foreach($posts_array as $post) {
+        unset(
+            $post->post_author,
+            $post->post_date,
+            $post->post_date_gmt,
+            $post->post_content_filtered,
+            $post->post_excerpt,
+            $post->post_status,
+            $post->comment_status,
+            $post->ping_status,
+            $post->post_password,
+            $post->to_ping,
+            $post->pinged,
+            $post->post_modified,
+            $post->post_modified_gmt,
+            $post->content_filtered,
+            $post->post_parent,
+            $post->guid,
+            $post->menu_order,
+            $post->post_type,
+            $post->post_mime_type,
+            $post->comment_count,
+            $post->filter,
+            $post->level,
+            $post->grade,
+            $post->lesson
+        );
 
-    /*
-     * Set post object response
-     */
+        $ambit             = get_field('ambit', $post->ID);
+        $expected_learning = get_field('expected_learning', $post->ID);
+        $theme             = get_field('theme', $post->ID);
+        $contents          = get_field('contents', $post->ID);
+        $level             = get_field('level', $post->ID);
 
-    // Set Index response
-    $post->ambit = !empty( $ambit ) ? $ambit : '';
-    $post->expected_learning = !empty( $expected_learning ) ? $expected_learning : '';
-    $post->theme = !empty( $theme ) ? $theme : '';
-    $post->contents = !empty( $contents ) ? $contents : '';
-  }
-  return $posts_array;
+        $grade  = '';
+        $lesson = '';
+        if ($level == 'Primaria') { // Is Primaria level
+            $grade = get_field('grados_primaria', $post->ID);
+            $lesson = get_field('asignaturas_primaria_' . $grade, $post->ID);
+        }
+        if ($level == 'Secundaria') { // Is Secundaria level
+            $grade = get_field('grados_secundaria', $post->ID);
+            $lesson = get_field('asignaturas_secundaria_' . $grade, $post->ID);
+        }
+        $post->ambit             = !empty($ambit) ? $ambit : '';
+        $post->expected_learning = !empty($expected_learning) ? $expected_learning : '';
+        $post->theme             = !empty($theme) ? $theme : '';
+        $post->contents          = !empty($contents) ? $contents : '';
+        $post->level             = !empty($level) ? $level : '';
+        $post->grade             = !empty($grade) ? $grade : '';
+        $post->lesson            = !empty($lesson) ? $lesson : '';
+    }
+    return $posts_array;
 }
 
 
@@ -121,32 +123,35 @@ function get_all_files() {
  * @return Array Array articles category post.
  */
 function get_file($data) {
-  $params = $data->get_params();
-  $post = get_post( $params['id'] );
-  unset(
-    $post->post_author,
-    $post->post_date,
-    $post->post_date_gmt,
-    $post->post_content_filtered,
-    $post->post_excerpt,
-    $post->post_status,
-    $post->comment_status,
-    $post->ping_status,
-    $post->post_password,
-    $post->to_ping,
-    $post->pinged,
-    $post->post_modified,
-    $post->post_modified_gmt,
-    $post->content_filtered,
-    $post->post_parent,
-    $post->guid,
-    $post->menu_order,
-    $post->post_type,
-    $post->post_mime_type,
-    $post->comment_count,
-    $post->filter
-  );
-  if( $post ){
+    $params = $data->get_params();
+    $post = get_post( $params['id'] );
+
+    if ($post) {
+
+    unset(
+        $post->post_author,
+        $post->post_date,
+        $post->post_date_gmt,
+        $post->post_content_filtered,
+        $post->post_excerpt,
+        $post->post_status,
+        $post->comment_status,
+        $post->ping_status,
+        $post->post_password,
+        $post->to_ping,
+        $post->pinged,
+        $post->post_modified,
+        $post->post_modified_gmt,
+        $post->content_filtered,
+        $post->post_parent,
+        $post->guid,
+        $post->menu_order,
+        $post->post_type,
+        $post->post_mime_type,
+        $post->comment_count,
+        $post->filter,
+        $post->level
+    );
     // Get Metadata values
     $author = get_field( 'author', $post->ID );
     $file_number = get_field( 'file_number', $post->ID );
@@ -167,52 +172,58 @@ function get_file($data) {
     $create_txt = get_field( 'create_text', $post->ID );
     $create_content = get_field( 'create_additional', $post->ID );
     $create_suggest = get_field( 'create_suggest', $post->ID );
+
     // Get Evaluation values
     $evaluation_content = get_field( 'evaluation_data', $post->ID );
-    $score = get_field( 'file_rate', $post->ID);
+    $score = get_field( 'score', $post->ID);
+    $level = get_field('level', $post->ID);
     /*
      * Set post object response
      */
+
     // Set Index response
-    $post->ambit = !empty( $ambit ) ? $ambit : '';
-    $post->expected_learning = !empty( $expected_learning ) ? $expected_learning : '';
-    $post->theme = !empty( $theme ) ? $theme : '';
-    $post->contents = !empty( $contents ) ? $contents : '';
+    $post->ambit               = !empty( $ambit ) ? $ambit : '';
+    $post->expected_learning   = !empty( $expected_learning ) ? $expected_learning : '';
+    $post->theme               = !empty( $theme ) ? $theme : '';
+    $post->contents            = !empty( $contents ) ? $contents : '';
+
     // Set Metadata response
-    $post->author = !empty( $author ) ? $author : '';
-    $post->file_number = !empty( $file_number ) ? $file_number : '';
-    $post->file_title = !empty( $file_title ) ? $file_title : '';
+    $post->author              = !empty( $author ) ? $author : '';
+    $post->file_number         = !empty( $file_number ) ? $file_number : '';
+    $post->file_title          = !empty( $file_title ) ? $file_title : '';
+    $post->level               = !empty( $level ) ? $level : '';
     // Set Discover response
-    $discover = new stdClass();
-    $post->discover = $discover;
-    $discover->image = !empty( $discover_img ) ? $discover_img : '';
-    $discover->text = !empty( $discover_txt ) ? $discover_txt : '';
-    $discover->question = !empty( $discover_question ) ? $discover_question : '';
+    $discover                  = new stdClass();
+    $post->discover            = $discover;
+    $discover->image           = !empty( $discover_img ) ? $discover_img : '';
+    $discover->text            = !empty( $discover_txt ) ? $discover_txt : '';
+    $discover->question        = !empty( $discover_question ) ? $discover_question : '';
     $discover->additional_info = !empty( $discover_add_info ) ? $discover_add_info : '';
-    $discover->relevant_themes = !empty( $discover_relevant ) ? $discover_relevant : '';
-    $discover->related = !empty( $discover_related ) ? $discover_related : '';
-    $discover->emotions = !empty( $discover_emotions ) ? $discover_emotions : '';
+    $discover->relevant        = !empty( $discover_relevant ) ? $discover_relevant : '';
+    $discover->related         = !empty( $discover_related ) ? $discover_related : '';
+    $discover->emotions        = !empty( $discover_emotions ) ? $discover_emotions : '';
     // Set Idea response
-    $idea = new stdClass();
-    $post->idea = $idea;
-    $idea->text = !empty( $idea_txt ) ? $idea_txt : '';
-    $idea->content = !empty( $idea_content ) ? $idea_content : '';
-    $idea->suggest = !empty( $idea_suggest ) ? $idea_suggest : '';
+    $idea                      = new stdClass();
+    $post->idea                = $idea;
+    $idea->text                = !empty( $idea_txt ) ? $idea_txt : '';
+    $idea->content             = !empty( $idea_content ) ? $idea_content : '';
+    $idea->suggest             = !empty( $idea_suggest ) ? $idea_suggest : '';
     // Set Create response
-    $create = new stdClass();
-    $post->create = $idea;
-    $create->text = !empty( $create_txt ) ? $create_txt : '';
-    $create->content = !empty( $create_content ) ? $create_content : '';
-    $create->suggest = !empty( $create_suggest ) ? $create_suggest : '';
-    $post->evaluation_content = !empty( $evaluation_content ) ? $evaluation_content : '';
-    $post->score = !empty( $score ) ? $score : '';
+    $create                    = new stdClass();
+    $post->create              = $idea;
+    $create->text              = !empty( $create_txt ) ? $create_txt : '';
+    $create->content           = !empty( $create_content ) ? $create_content : '';
+    $create->suggest           = !empty( $create_suggest ) ? $create_suggest : '';
+    $post->evaluation_content  = !empty( $evaluation_content ) ? $evaluation_content : '';
+    $post->score               = !empty( $score ) ? $score : '';
     return $post;
-  } else {
-    $post->code = 404;
-    $post->msg = 'Not Found';
-    header('Status: 404 Not Found');
-    return $post;
-  }
+    }
+    else {
+        $post->code = 404;
+        $post->message = "Not Found";
+        header("Status: 404 Not Found");
+        return $post;
+    }
 }
 
 
