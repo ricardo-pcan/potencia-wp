@@ -22,12 +22,12 @@
            "name": "acf-to-rest-api",
            "active": true,
            "version": "2.2.1"
-       },
-       {
+        },
+        {
            "name": "wordpress-importer",
            "active": true,
            "version": "0.6.3"
-       }
+        }
     ],
     "custom_plugins" : [
         {
