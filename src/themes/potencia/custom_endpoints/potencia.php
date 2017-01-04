@@ -37,10 +37,30 @@ function register_potencia_routes() {
 
 
 /**
- * Get fichas custom post
+ * Get all custom post fichas
  *
- * @param array $data Options for the function.
+ * @param array $params Options for the function.
  * @return Array Array articles category post.
+ *
+ * Request:
+ *     Parameter: paged
+ *         Description: This params is the number of page in the request
+ *             pagination, the post per page is 10.
+ *         Default: 1
+ *         Required: False
+ *
+ *     Parameter: level
+ *         Description: This param is the filter for level [Primaria |
+ *             Secundaria]
+ *         Required: False
+ *
+ *     Parameter: grade
+ *         Description: This param is the filter for grade such [1, 2, 3]
+ *         Required: False
+ *
+ *     Parameter: lesson
+ *         Descirption: THis param is the filter for lesson such Español
+ *         Required: False
  */
 function get_all_files($params) {
 
