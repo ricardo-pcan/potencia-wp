@@ -113,6 +113,7 @@ function get_all_files($params) {
         $theme             = get_field('theme', $post->ID);
         $contents          = get_field('contents', $post->ID);
         $level             = get_field('level', $post->ID);
+        $bimester          = get_field('bimester', $post->ID);
 
         $grade  = '';
         $lesson = '';
@@ -131,6 +132,7 @@ function get_all_files($params) {
         $post->level             = !empty($level) ? $level : '';
         $post->grade             = !empty($grade) ? $grade : '';
         $post->lesson            = !empty($lesson) ? $lesson : '';
+        $post->bimester          = !empty($bimester) ? $bimester : '';
     }
     return $posts_array;
 }
