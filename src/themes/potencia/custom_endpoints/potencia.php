@@ -113,7 +113,7 @@ function get_all_files($params) {
         $theme             = get_field('theme', $post->ID);
         $contents          = get_field('contents', $post->ID);
         $level             = get_field('level', $post->ID);
-        $bimester          = get_field('bimester', $post->ID);
+        $bimester          = get_field('bimestre', $post->ID);
 
         $grade  = '';
         $lesson = '';
@@ -199,7 +199,7 @@ function get_file($data) {
     $evaluation_content      = get_field( 'evaluation_data', $post->ID );
     $score                   = get_field( 'score', $post->ID);
     $level                   = get_field('level', $post->ID);
-    $bimester                = get_field('bimester', $post->ID);
+    $bimester                = get_field('bimestre', $post->ID);
     $grade  = '';
     $lesson = '';
     if ($level == 'Primaria') { // Is Primaria level
