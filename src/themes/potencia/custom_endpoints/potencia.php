@@ -175,30 +175,41 @@ function get_file($data) {
         $post->level
     );
     // Get Metadata values
-    $author = get_field( 'author', $post->ID );
-    $file_number = get_field( 'file_number', $post->ID );
-    $file_title = get_field( 'file_title', $post->ID);
+    $author                  = get_field( 'author', $post->ID );
+    $file_number             = get_field( 'file_number', $post->ID );
+    $file_title              = get_field( 'file_title', $post->ID);
     // Get Discover values
-    $discover_img = get_field( 'discover_img', $post->ID );
-    $discover_txt = get_field( 'discover_txt', $post->ID );
-    $discover_question = get_field( 'discover_question', $post->ID );
-    $discover_add_info = get_field( 'discover_add_info', $post->ID );
-    $discover_relevant = get_field( 'discover_relevant', $post->ID );
-    $discover_related = get_field( 'discover_related', $post->ID );
-    $discover_emotions = get_field( 'discover_emotions', $post->ID );
+    $discover_img            = get_field( 'discover_img', $post->ID );
+    $discover_txt            = get_field( 'discover_txt', $post->ID );
+    $discover_question       = get_field( 'discover_question', $post->ID );
+    $discover_add_info       = get_field( 'discover_add_info', $post->ID );
+    $discover_relevant       = get_field( 'discover_relevant', $post->ID );
+    $discover_related        = get_field( 'discover_related', $post->ID );
+    $discover_emotions       = get_field( 'discover_emotions', $post->ID );
     // Get Idea values
-    $idea_txt = get_field( 'idea_text', $post->ID );
-    $idea_content = get_field( 'idea_additional', $post->ID );
-    $idea_suggest = get_field( 'idea_suggest', $post->ID );
+    $idea_txt                = get_field( 'idea_text', $post->ID );
+    $idea_content            = get_field( 'idea_additional', $post->ID );
+    $idea_suggest            = get_field( 'idea_suggest', $post->ID );
     // Get Create values
-    $create_txt = get_field( 'create_text', $post->ID );
-    $create_content = get_field( 'create_additional', $post->ID );
-    $create_suggest = get_field( 'create_suggest', $post->ID );
+    $create_txt              = get_field( 'create_text', $post->ID );
+    $create_content          = get_field( 'create_additional', $post->ID );
+    $create_suggest          = get_field( 'create_suggest', $post->ID );
 
     // Get Evaluation values
-    $evaluation_content = get_field( 'evaluation_data', $post->ID );
-    $score = get_field( 'score', $post->ID);
-    $level = get_field('level', $post->ID);
+    $evaluation_content      = get_field( 'evaluation_data', $post->ID );
+    $score                   = get_field( 'score', $post->ID);
+    $level                   = get_field('level', $post->ID);
+    $bimester                = get_field('bimester', $post->ID);
+    $grade  = '';
+    $lesson = '';
+    if ($level == 'Primaria') { // Is Primaria level
+        $grade = get_field('grados_primaria', $post->ID);
+        $lesson = get_field('asignaturas_primaria_' . $grade, $post->ID);
+    }
+    if ($level == 'Secundaria') { // Is Secundaria level
+        $grade = get_field('grados_secundaria', $post->ID);
+        $lesson = get_field('asignaturas_secundaria_' . $grade, $post->ID);
+    }
     /*
      * Set post object response
      */
@@ -238,6 +249,9 @@ function get_file($data) {
     $create->suggest           = !empty( $create_suggest ) ? $create_suggest : '';
     $post->evaluation_content  = !empty( $evaluation_content ) ? $evaluation_content : '';
     $post->score               = !empty( $score ) ? $score : '';
+    $post->grade             = !empty($grade) ? $grade : '';
+    $post->lesson            = !empty($lesson) ? $lesson : '';
+    $post->bimester          = !empty($bimester) ? $bimester : '';
     return $post;
     }
     else {
