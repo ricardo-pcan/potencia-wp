@@ -114,6 +114,7 @@ function get_all_files($params) {
         $contents          = get_field('contents', $post->ID);
         $level             = get_field('level', $post->ID);
         $bimester          = get_field('bimestre', $post->ID);
+        $file_thumbnail    = get_field( 'file_small_thumbnail', $post->ID );
 
         $grade  = '';
         $lesson = '';
@@ -133,6 +134,7 @@ function get_all_files($params) {
         $post->grade             = !empty($grade) ? $grade : '';
         $post->lesson            = !empty($lesson) ? $lesson : '';
         $post->bimester          = !empty($bimester) ? $bimester : '';
+        $post->file_thumbnail    =  $file_thumbnail;
     }
     return $posts_array;
 }
@@ -175,26 +177,45 @@ function get_file($data) {
         $post->level
     );
     // Get Metadata values
+    $ambit                   = get_field( 'ambit', $post->ID );
+    $expected_learning       = get_field( 'expected_learning', $post->ID );
+    $theme                   = get_field( 'theme', $post->ID );
+    $contents                = get_field( 'contents', $post->ID );
+
+    // Get Identification values
     $author                  = get_field( 'author', $post->ID );
-    $file_number             = get_field( 'file_number', $post->ID );
-    $file_title              = get_field( 'file_title', $post->ID);
+    $file_thumbnail          = get_field( 'file_small_thumbnail', $post->ID );
+    $file_main_attachemnt    = get_field( 'file_main_attachment', $post->ID );
+    $file_key                = get_field( 'file_key', $post->ID );
+
+    // Get teacher correspondance fields
+    $teacher_correspondance_title = get_field( 'teacher_mail_input', $post->ID );
+    $teacher_mail_title           = get_field( 'teacher_mail_url', $post->ID );
+
     // Get Discover values
     $discover_img            = get_field( 'discover_img', $post->ID );
-    $discover_txt            = get_field( 'discover_txt', $post->ID );
+    $discover_txt_student    = get_field( 'discover_txt_student', $post->ID );
     $discover_question       = get_field( 'discover_question', $post->ID );
+    $discover_txt_teacher    = get_field( 'discover_txt_teacher', $post->ID );
     $discover_add_info       = get_field( 'discover_add_info', $post->ID );
     $discover_relevant       = get_field( 'discover_relevant', $post->ID );
     $discover_related        = get_field( 'discover_related', $post->ID );
     $discover_emotions       = get_field( 'discover_emotions', $post->ID );
-    // Get Idea values
-    $idea_txt                = get_field( 'idea_text', $post->ID );
-    $idea_content            = get_field( 'idea_additional', $post->ID );
-    $idea_suggest            = get_field( 'idea_suggest', $post->ID );
-    // Get Create values
-    $create_txt              = get_field( 'create_text', $post->ID );
-    $create_content          = get_field( 'create_additional', $post->ID );
-    $create_suggest          = get_field( 'create_suggest', $post->ID );
 
+    // Get Idea values
+    $idea_txt_student       = get_field( 'idea_txt_student', $post->ID );
+    $idea_txt_teacher       = get_field( 'idea_txt_teacher', $post->ID );
+    $idea_content           = get_field( 'idea_additional', $post->ID );
+    $idea_suggest           = get_field( 'idea_suggest', $post->ID );
+
+    // Get Create values
+    $create_txt_student     = get_field( 'create_txt_student', $post->ID );
+    $create_txt_teacher     = get_field( 'create_txt_teacher', $post->ID );
+    $create_content         = get_field( 'create_additional', $post->ID );
+    $create_suggest         = get_field( 'create_suggest', $post->ID );
+
+    // Get Emotions value
+    $emotions = get_field('emotions_txt', $post->ID );
     // Get Evaluation values
     $evaluation_content      = get_field( 'evaluation_data', $post->ID );
     $score                   = get_field( 'score', $post->ID);
@@ -210,6 +231,13 @@ function get_file($data) {
         $grade = get_field('grados_secundaria', $post->ID);
         $lesson = get_field('asignaturas_secundaria_' . $grade, $post->ID);
     }
+
+    // Get Enrich class values
+    $enrich_med       = get_field( 'enrich_med', $post->ID );
+    $enrich_plan      = get_field( 'enrich_plan', $post->ID );
+    $enrich_reactive  = get_field( 'enrich_reactive', $post->ID );
+
+
     /*
      * Set post object response
      */
@@ -220,41 +248,63 @@ function get_file($data) {
     $post->theme               = !empty( $theme ) ? $theme : '';
     $post->contents            = !empty( $contents ) ? $contents : '';
 
-    // Set Metadata response
-    $post->author              = !empty( $author ) ? $author : '';
-    $post->file_number         = !empty( $file_number ) ? $file_number : '';
-    $post->file_title          = !empty( $file_title ) ? $file_title : '';
-    $post->level               = !empty( $level ) ? $level : '';
+    // Set identification response
+    $post->author               = !empty( $author ) ? $author : '';
+    $post->file_thumbnail       = $file_thumbnail;
+    $post->file_main_attachment = $file_main_attachment;
+    $post->file_key             = !empty( $file_key ) ? $file_key : '';
+
+    // Set Teacher Correspondance response
+    $teacher_correspondance         = new stdClass();
+    $post->teacher_correspondance   = $teacher_correspondance;
+    $teacher_correspondance->title  = !empty( $teacher_correspondance_title ) ? $teacher_correspondance_title : '';
+    $teacher_correspondance->url    = !empty( $teacher_correspondance_url ) ? $teacher_correspondance_url : '';
+
     // Set Discover response
     $discover                  = new stdClass();
     $post->discover            = $discover;
     $discover->image           = !empty( $discover_img ) ? $discover_img : '';
-    $discover->text            = !empty( $discover_txt ) ? $discover_txt : '';
+    $discover->text_student    = !empty( $discover_txt_student ) ? $discover_txt_student : '';
     $discover->question        = !empty( $discover_question ) ? $discover_question : '';
+    $discover->text_teacher    = !empty( $discover_txt_teacher ) ? $discover_txt_teacher : '';
     $discover->additional_info = !empty( $discover_add_info ) ? $discover_add_info : '';
-    $discover->relevant        = !empty( $discover_relevant ) ? $discover_relevant : '';
+    $discover->relevant_themes = !empty( $discover_relevant ) ? $discover_relevant : '';
     $discover->related         = !empty( $discover_related ) ? $discover_related : '';
     $discover->emotions        = !empty( $discover_emotions ) ? $discover_emotions : '';
+
     // Set Idea response
     $idea                      = new stdClass();
     $post->idea                = $idea;
-    $idea->text                = !empty( $idea_txt ) ? $idea_txt : '';
+    $idea->text_student        = !empty( $idea_txt_student ) ? $idea_txt_student : '';
+    $idea->text_teacher        = !empty( $idea_txt_teacher ) ? $idea_txt_teacher : '';
     $idea->content             = !empty( $idea_content ) ? $idea_content : '';
     $idea->suggest             = !empty( $idea_suggest ) ? $idea_suggest : '';
+
     // Set Create response
     $create                    = new stdClass();
     $post->create              = $idea;
-    $create->text              = !empty( $create_txt ) ? $create_txt : '';
+    $create->text_student      = !empty( $create_txt_student ) ? $create_txt_student : '';
+    $create->text_teacher      = !empty( $create_txt_teacher ) ? $create_txt_teacher : '';
     $create->content           = !empty( $create_content ) ? $create_content : '';
     $create->suggest           = !empty( $create_suggest ) ? $create_suggest : '';
+
+    $post->emotions            = !empty( $emotions ) ? $emotions : '';
     $post->evaluation_content  = !empty( $evaluation_content ) ? $evaluation_content : '';
     $post->score               = !empty( $score ) ? $score : '';
-    $post->grade             = !empty($grade) ? $grade : '';
-    $post->lesson            = !empty($lesson) ? $lesson : '';
-    $post->bimester          = !empty($bimester) ? $bimester : '';
+    $post->grade               = !empty($grade) ? $grade : '';
+    $post->lesson              = !empty($lesson) ? $lesson : '';
+    $post->bimester            = !empty($bimester) ? $bimester : '';
+
+    // Set Enrich response
+    $enrich                    = new stdClass();
+    $post->enrich              = $enrich;
+    $enrich->related_meds      = !empty( $enrich_med ) ? $enrich_med : '';
+    $enrich->related_plannings = !empty( $enrich_plan ) ? $enrich_plan : '';
+    $enrich->related_reactives = !empty( $enrich_reactive) ? $enrich_reactive : '';
+
     return $post;
-    }
-    else {
+
+    } else {
         $post->code = 404;
         $post->message = "Not Found";
         header("Status: 404 Not Found");
