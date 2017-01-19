@@ -140,19 +140,6 @@ add_action( 'rest_api_init', 'slug_register_fichas_custom_post_type' );
  */
 include "custom_endpoints/potencia.php";
 
-/*
- * Include custom fields
- */
-include "custom-fields.php";
-
-
-
-function load_custom_wp_admin_js() {
-  wp_register_script( 'admin', get_template_directory_uri() . '/admin.js', array(), '', true ); // Vendor
-  wp_enqueue_script( 'admin' ); // Enqueue it!
-}
-add_action( 'admin_enqueue_scripts', 'load_custom_wp_admin_js' );
-
 function my_pre_get_posts($query) {
 	if ( is_admin() ) {
 		return $query;
