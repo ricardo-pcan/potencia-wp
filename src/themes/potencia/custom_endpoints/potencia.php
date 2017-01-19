@@ -206,13 +206,11 @@ function get_file($data) {
     $idea_txt_student       = get_field( 'idea_txt_student', $post->ID );
     $idea_txt_teacher       = get_field( 'idea_txt_teacher', $post->ID );
     $idea_content           = get_field( 'idea_additional', $post->ID );
-    $idea_suggest           = get_field( 'idea_suggest', $post->ID );
 
     // Get Create values
     $create_txt_student     = get_field( 'create_txt_student', $post->ID );
     $create_txt_teacher     = get_field( 'create_txt_teacher', $post->ID );
     $create_content         = get_field( 'create_additional', $post->ID );
-    $create_suggest         = get_field( 'create_suggest', $post->ID );
 
     // Get Emotions value
     $emotions = get_field('emotions_txt', $post->ID );
@@ -278,7 +276,6 @@ function get_file($data) {
     $idea->text_student        = !empty( $idea_txt_student ) ? $idea_txt_student : '';
     $idea->text_teacher        = !empty( $idea_txt_teacher ) ? $idea_txt_teacher : '';
     $idea->content             = !empty( $idea_content ) ? $idea_content : '';
-    $idea->suggest             = !empty( $idea_suggest ) ? $idea_suggest : '';
 
     // Set Create response
     $create                    = new stdClass();
@@ -286,7 +283,6 @@ function get_file($data) {
     $create->text_student      = !empty( $create_txt_student ) ? $create_txt_student : '';
     $create->text_teacher      = !empty( $create_txt_teacher ) ? $create_txt_teacher : '';
     $create->content           = !empty( $create_content ) ? $create_content : '';
-    $create->suggest           = !empty( $create_suggest ) ? $create_suggest : '';
 
     $post->emotions            = !empty( $emotions ) ? $emotions : '';
     $post->evaluation_content  = !empty( $evaluation_content ) ? $evaluation_content : '';
