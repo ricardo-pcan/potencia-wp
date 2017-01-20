@@ -176,6 +176,22 @@ function get_file($data) {
         $post->filter,
         $post->level
     );
+    // Get curricula values
+    $level             = get_field('level', $post->ID);
+    $bimester          = get_field('bimestre', $post->ID);
+
+    $grade  = '';
+    $lesson = '';
+    if ($level == 'Primaria') { // Is Primaria level
+        $grade = get_field('grados_primaria', $post->ID);
+        $lesson = get_field('asignaturas_primaria_' . $grade, $post->ID);
+    }
+    if ($level == 'Secundaria') { // Is Secundaria level
+        $grade = get_field('grados_secundaria', $post->ID);
+        $lesson = get_field('asignaturas_secundaria_' . $grade, $post->ID);
+    }
+
+
     // Get Metadata values
     $ambit                   = get_field( 'ambit', $post->ID );
     $expected_learning       = get_field( 'expected_learning', $post->ID );
@@ -239,6 +255,14 @@ function get_file($data) {
     /*
      * Set post object response
      */
+
+    // Set curricula response
+    $curricula                 = new stdClass();
+    $post->curricula           = $curricula;
+    $curricula->level          = !empty($level) ? $level : '';
+    $curricula->grade          = !empty($grade) ? $grade : '';
+    $curricula->lesson         = !empty($lesson) ? $lesson : '';
+    $curricula->bimester       = !empty($bimester) ? $bimester : '';
 
     // Set Index response
     $post->ambit               = !empty( $ambit ) ? $ambit : '';
