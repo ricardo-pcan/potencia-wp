@@ -78,7 +78,23 @@ function get_all_files($params) {
         'suppress_filters' => true
     );
 
+    $argsTotal = array(
+        'orderby'          => 'date',
+        'order'            => 'DESC',
+        'post_type'        => 'fichas',
+        'post_status'      => 'publish',
+        'suppress_filters' => true
+    );
+
     $posts_array = get_posts($args);
+    $postsAll    = get_posts($argsTotal);
+    $countPosts  = count($posts_array);
+    $totalPosts  = count($postsAll);
+
+    $arrayResponse = array(
+        'data' => array(),
+        'meta' => array()
+    );
 
     foreach($posts_array as $post) {
         unset(
@@ -132,7 +148,18 @@ function get_all_files($params) {
         $post->grade             = !empty($grade) ? $grade : '';
         $post->lesson            = !empty($lesson) ? $lesson : '';
     }
-    return $posts_array;
+
+    $postMeta = array(
+        'page'  => $paged + 1,
+        'limit' => $postPerPage,
+        'posts' => $countPosts,
+        'total' => $totalPosts
+    );
+
+    $arrayResponse['data'] = $posts_array;
+    $arrayResponse['meta'] = $postMeta;
+
+    return $arrayResponse;
 }
 
 
