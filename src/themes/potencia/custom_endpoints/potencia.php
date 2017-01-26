@@ -69,8 +69,7 @@ function get_all_files($params) {
     $postOffset = $paged * $postPerPage;
 
     $args = array(
-        'posts_per_page'   => $postPerPage,
-        'offset'           => $postOffset,
+        'posts_per_page'   => -1,
         'orderby'          => 'date',
         'order'            => 'DESC',
         'post_type'        => 'fichas',
@@ -153,6 +152,7 @@ function get_all_files($params) {
         $post->lesson            = !empty($lesson) ? $lesson : '';
         $post->bimester          = !empty($bimester) ? $bimester : '';
         $post->file_thumbnail    =  $file_thumbnail;
+
         $post->file_index        = !empty($file_index) ? $file_index : '';
         if ($_GET['bimester'] != null) {
             if ($post->bimester == $_GET['bimester']) {
@@ -164,8 +164,6 @@ function get_all_files($params) {
     }
     $countPosts  = count($postsResponse);
     $postMeta = array(
-        'page'  => $paged + 1,
-        'limit' => $postPerPage,
         'posts' => $countPosts,
     );
 
