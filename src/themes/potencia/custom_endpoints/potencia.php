@@ -132,6 +132,7 @@ function get_all_files($params) {
         $level             = get_field('level', $post->ID);
         $bimester          = get_field('bimestre', $post->ID);
         $file_thumbnail    = get_field( 'file_small_thumbnail', $post->ID );
+        $file_index        = get_field( 'file_index', $post->ID );
 
         $grade  = '';
         $lesson = '';
@@ -152,6 +153,7 @@ function get_all_files($params) {
         $post->lesson            = !empty($lesson) ? $lesson : '';
         $post->bimester          = !empty($bimester) ? $bimester : '';
         $post->file_thumbnail    =  $file_thumbnail;
+        $post->file_index        = !empty($file_index) ? $file_index : '';
         if ($_GET['bimester'] != null) {
             if ($post->bimester == $_GET['bimester']) {
                 array_push($postsResponse, $post);
@@ -237,6 +239,7 @@ function get_file($data) {
     $file_thumbnail          = get_field( 'file_small_thumbnail', $post->ID );
     $file_main_attachemnt    = get_field( 'file_main_attachment', $post->ID );
     $file_key                = get_field( 'file_key', $post->ID );
+    $file_index              = get_field( 'file_index', $post->ID );
 
     // Get teacher correspondance fields
     $teacher_correspondance_title = get_field( 'teacher_mail_input', $post->ID );
@@ -309,6 +312,7 @@ function get_file($data) {
     $post->file_thumbnail       = $file_thumbnail;
     $post->file_main_attachment = $file_main_attachment;
     $post->file_key             = !empty( $file_key ) ? $file_key : '';
+    $post->file_index           = !empty( $file_index ) ? $file_index : '';
 
     // Set Teacher Correspondance response
     $teacher_correspondance         = new stdClass();
