@@ -88,15 +88,15 @@ function get_all_files($params) {
 
     $posts_array = get_posts($args);
     $postsAll    = get_posts($argsTotal);
-    $countPosts  = count($posts_array);
-    $totalPosts  = count($postsAll);
+    $postsResponse  = array();
 
     $arrayResponse = array(
         'data' => array(),
         'meta' => array()
     );
 
-    foreach($posts_array as $post) {
+    foreach ($posts_array as $post) {
+
         unset(
             $post->post_author,
             $post->post_date,
@@ -123,6 +123,7 @@ function get_all_files($params) {
             $post->grade,
             $post->lesson
         );
+
 
         $ambit             = get_field('ambit', $post->ID);
         $expected_learning = get_field('expected_learning', $post->ID);
@@ -151,16 +152,22 @@ function get_all_files($params) {
         $post->lesson            = !empty($lesson) ? $lesson : '';
         $post->bimester          = !empty($bimester) ? $bimester : '';
         $post->file_thumbnail    =  $file_thumbnail;
+        if ($_GET['bimester'] != null) {
+            if ($post->bimester == $_GET['bimester']) {
+                array_push($postsResponse, $post);
+            }
+        } else {
+            array_push($postsResponse, $post);
+        }
     }
-
+    $countPosts  = count($postsResponse);
     $postMeta = array(
         'page'  => $paged + 1,
         'limit' => $postPerPage,
         'posts' => $countPosts,
-        'total' => $totalPosts
     );
 
-    $arrayResponse['data'] = $posts_array;
+    $arrayResponse['data'] = $postsResponse;
     $arrayResponse['meta'] = $postMeta;
 
     return $arrayResponse;
