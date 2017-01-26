@@ -78,9 +78,25 @@ function get_all_files($params) {
         'suppress_filters' => true
     );
 
-    $posts_array = get_posts($args);
+    $argsTotal = array(
+        'orderby'          => 'date',
+        'order'            => 'DESC',
+        'post_type'        => 'fichas',
+        'post_status'      => 'publish',
+        'suppress_filters' => true
+    );
 
-    foreach($posts_array as $post) {
+    $posts_array = get_posts($args);
+    $postsAll    = get_posts($argsTotal);
+    $postsResponse  = array();
+
+    $arrayResponse = array(
+        'data' => array(),
+        'meta' => array()
+    );
+
+    foreach ($posts_array as $post) {
+
         unset(
             $post->post_author,
             $post->post_date,
@@ -107,6 +123,7 @@ function get_all_files($params) {
             $post->grade,
             $post->lesson
         );
+
 
         $ambit             = get_field('ambit', $post->ID);
         $expected_learning = get_field('expected_learning', $post->ID);
@@ -137,8 +154,25 @@ function get_all_files($params) {
         $post->bimester          = !empty($bimester) ? $bimester : '';
         $post->file_thumbnail    =  $file_thumbnail;
         $post->file_index        = !empty($file_index) ? $file_index : '';
+        if ($_GET['bimester'] != null) {
+            if ($post->bimester == $_GET['bimester']) {
+                array_push($postsResponse, $post);
+            }
+        } else {
+            array_push($postsResponse, $post);
+        }
     }
-    return $posts_array;
+    $countPosts  = count($postsResponse);
+    $postMeta = array(
+        'page'  => $paged + 1,
+        'limit' => $postPerPage,
+        'posts' => $countPosts,
+    );
+
+    $arrayResponse['data'] = $postsResponse;
+    $arrayResponse['meta'] = $postMeta;
+
+    return $arrayResponse;
 }
 
 

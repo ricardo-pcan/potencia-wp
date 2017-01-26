@@ -140,6 +140,8 @@ add_action( 'rest_api_init', 'slug_register_fichas_custom_post_type' );
  */
 include "custom_endpoints/potencia.php";
 
+add_action('pre_get_posts', 'my_pre_get_posts');
+
 function my_pre_get_posts($query) {
 	if ( is_admin() ) {
 		return $query;
@@ -160,14 +162,8 @@ function my_pre_get_posts($query) {
 			$query->set('meta_value', $_GET['lesson']);
 			$query->set('meta_compare', 'LIKE');
     	}
-        if (isset($_GET['bimester'])) {
-            $grade = $_GET['bimester'];
-    		$query->set('meta_key', 'bimestre');
-			$query->set('meta_value', $_GET['bimester']);
-    	}
+
 	}
     return $query;
 }
-add_action('pre_get_posts', 'my_pre_get_posts');
-
 ?>
